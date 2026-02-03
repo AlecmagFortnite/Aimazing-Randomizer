@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Chat AI</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .chat-container {
+        width: 400px;
+        max-width: 90%;
+        height: 600px;
+        background: #2c2c2c;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .chat-box {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 80%;
+        padding: 10px 15px;
+        border-radius: 15px;
+        word-wrap: break-word;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .user-message {
+        background: #ff0044;
+        align-self: flex-end;
+    }
+
+    .ai-message {
+        background: #4444ff;
+        align-self: flex-start;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-container {
+        display: flex;
+        border-top: 1px solid #555;
+    }
+
+    .input-container input {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        background: #3a3a3a;
+        color: white;
+    }
+
+    .input-container button {
+        padding: 15px 20px;
+        background: #ff0044;
+        border: none;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        transition: background 0.2s ease;
+    }
+
+    .input-container button:hover {
+        background: #ff3366;
+    }
+</style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Schreib was..." onkeydown="if(event.key==='Enter'){sendMessage()}">
+        <button onclick="sendMessage()">Senden</button>
+    </div>
+</div>
+
+<script>
+    const responses = [
+        "Hallo!", "Wie geht's dir?", "Heute ist ein schöner Tag!", "Ich liebe Pizza.", 
+        "Javascript ist cool.", "Katzen sind süß.", "Das ist ja interessant.", "Ich mag Regen.",
+        "Hast du schon gegessen?", "Das klingt spannend.", "Wow, echt jetzt?", "Kannst du das erklären?",
+        "Ich verstehe.", "Genau!", "Vielleicht.", "Auf jeden Fall!", "Das ist verrückt.",
+        "Cool!", "Haha!", "Oh nein!", "Alles klar!", "Mach weiter so!", "Ich glaube schon.",
+        "Das passt.", "Sehr gut.", "Interessant.", "Okay.", "Warum nicht?", "Super!",
+        "Krass!", "Genial!", "Keine Ahnung.", "Vielleicht später.", "Ich hoffe es.", "Alles gut.",
+        "So ist das Leben.", "Das war knapp.", "Ups!", "Vorsichtig!", "Wow, das ist viel!",
+        "Abenteuer warten.", "Lass uns starten.", "Auf geht's!", "Zeit zu lernen.", "Spaß muss sein.",
+        "Richtig!", "Falsch.", "Ich bin dabei.", "Halt durch!", "Das ist einfach.", "Das ist schwer.",
+        "Versuch es nochmal.", "Gute Idee.", "Nicht schlecht.", "Toll gemacht.", "Weiter so!",
+        "Stopp!", "Moment.", "Echt jetzt?", "Ich weiß nicht.", "Vielleicht ja.", "Vielleicht nein.",
+        "Interessant...", "Das gefällt mir.", "Klingt logisch.", "Oh!", "Ach so.", "Hmmm...",
+        "Perfekt.", "Unglaublich.", "Das war lustig.", "Ich bin müde.", "Zeit für eine Pause.",
+        "Lass uns spielen.", "Komm schon!", "Richtig so.", "So nicht.", "Pass auf!", "Halt dich fest.",
+        "Ganz ruhig.", "Bleib locker.", "Keine Panik.", "Alles klar hier.", "Super Idee.",
+        "Das geht nicht.", "Warum?", "Ich liebe es.", "Ich hasse es.", "Fantastisch!",
+        "Beeindruckend.", "Das ist alles.", "Genau mein Ding.", "Nicht mein Stil.", "Interessant, echt.",
+        "Krass, oder?", "Schon wieder?", "Wirklich?", "Vielleicht morgen.", "Heute nicht.",
+        "Ich bin hungrig.", "Zeit zu essen.", "Los geht's.", "Jetzt!", "Später.", "Bald.",
+        "Ich bin beschäftigt.", "Cool, oder?", "Das ist mega.", "Mega nice!", "Hammer!",
+        "Krass krass.", "Unfassbar.", "Echt unglaublich.", "So ein Mist.", "Mist!", "Oh nein!",
+        "Haha, lustig.", "Das ist witzig.", "Lachen ist gesund.", "Lächeln!", "Freude pur!",
+        "Alles Liebe.", "Herzlich willkommen.", "Auf Wiedersehen.", "Tschüss!", "Bis bald.",
+        "Mach's gut.", "Viel Erfolg!", "Viel Glück!", "Pass auf dich auf.", "Bleib gesund.",
+        "Träume groß.", "Sei mutig.", "Glaub an dich.", "Nie aufgeben.", "Immer weiter.",
+        "Du schaffst das.", "Keine Sorge.", "Alles wird gut.", "Das Leben ist schön.",
+        "Genieße den Moment.", "Bleib positiv.", "Sei glücklich.", "Lebe im Jetzt.",
+        "Lass los.", "Atme tief durch.", "Alles im Griff.", "Cool bleiben.", "Bleib stark.",
+        "Ich helfe dir.", "Ich bin hier.", "Vertrau mir.", "Keine Angst.", "Mutig sein.",
+        "Abenteuer erleben.", "Neues entdecken.", "Staunen.", "Wunderbar.", "Fantastisch!",
+        "Unglaublich schön.", "Das lohnt sich.", "Mach weiter.", "Bleib dran.", "Nie müde werden.",
+        "Kreativ sein.", "Ideen haben.", "Träume verwirklichen.", "Spaß haben.", "Freunde treffen.",
+        "Lachen.", "Tanzen.", "Singen.", "Feiern.", "Genießen.", "Abenteuer warten.",
+        "Erfolg haben.", "Glücklich sein.", "Liebe teilen.", "Gutes tun.", "Mut zeigen.",
+        "Geduldig sein.", "Weise handeln.", "Stark bleiben.", "Klar denken.", "Lernen.",
+        "Wachsen.", "Verändern.", "Inspirieren.", "Beeinflussen.", "Führen.", "Träumen.",
+        "Leben.", "Lieben.", "Helfen.", "Verstehen.", "Erleben.", "Genießen.", "Fühlen.",
+        "Staunen.", "Entdecken.", "Kämpfen.", "Siegen.", "Feiern.", "Teilen.", "Strahlen.",
+        "Leuchten.", "Glänzen.", "Erblühen.", "Aufblühen.", "Wachsen.", "Stark sein.",
+        "Mutig sein.", "Kreativ sein.", "Lustig sein.", "Freundlich sein.", "Hilfsbereit sein."
+    ];
+
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text === "") return;
+        
+        // User Nachricht
+        const userMsg = document.createElement('div');
+        userMsg.classList.add('message', 'user-message');
+        userMsg.textContent = text;
+        chatBox.appendChild(userMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        userInput.value = "";
+
+        // AI Antwort nach kurzer Verzögerung
+        setTimeout(() => {
+            const aiMsg = document.createElement('div');
+            aiMsg.classList.add('message', 'ai-message');
+            const randomIndex = Math.floor(Math.random() * responses.length);
+            aiMsg.textContent = responses[randomIndex];
+            chatBox.appendChild(aiMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 500 + Math.random() * 1000); // zufällige Verzögerung 0,5–1,5s
+    }
+</script>
+</body>
+</html>
