@@ -3,137 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Chat AI</title>
+<title>Random Chat AI – Multi-Modus</title>
 <style>
-    /* Body & Hintergrund */
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
-        color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
 
-    /* Chat Container */
-    .chat-container {
-        width: 450px;
-        max-width: 95%;
-        height: 650px;
-        background: #2c2c2c;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-    }
+.mode-buttons {
+    margin-bottom: 10px;
+}
+.mode-buttons button {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #4444ff;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.mode-buttons button.active {
+    background: #ff0044;
+}
+.mode-buttons button:hover {
+    transform: scale(1.05);
+}
 
-    /* Chat Box */
-    .chat-box {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        background: rgba(255,255,255,0.02);
-        scrollbar-width: thin;
-        scrollbar-color: #ff0044 transparent;
-    }
+.chat-container {
+    width: 450px;
+    max-width: 95%;
+    height: 650px;
+    background: #2c2c2c;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+}
 
-    .chat-box::-webkit-scrollbar {
-        width: 8px;
-    }
-    .chat-box::-webkit-scrollbar-thumb {
-        background-color: #ff0044;
-        border-radius: 4px;
-    }
-    .chat-box::-webkit-scrollbar-track {
-        background: transparent;
-    }
+.chat-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(255,255,255,0.02);
+}
 
-    /* Nachrichten */
-    .message {
-        max-width: 80%;
-        padding: 12px 18px;
-        border-radius: 18px;
-        word-wrap: break-word;
-        animation: fadeIn 0.3s ease;
-        line-height: 1.4;
-        font-size: 0.95rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
+.message {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    animation: fadeIn 0.3s ease;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
 
-    .user-message {
-        background: #ff0044;
-        align-self: flex-end;
-        border-bottom-right-radius: 4px;
-        border-bottom-left-radius: 18px;
-    }
+.user-message {
+    background: #ff0044;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 18px;
+}
 
-    .ai-message {
-        background: #4444ff;
-        align-self: flex-start;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 18px;
-    }
+.ai-message {
+    background: #4444ff;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 18px;
+}
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(12px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    /* Eingabe-Bereich */
-    .input-container {
-        display: flex;
-        border-top: 1px solid #555;
-    }
+.input-container {
+    display: flex;
+    border-top: 1px solid #555;
+}
 
-    .input-container input {
-        flex: 1;
-        padding: 15px;
-        border: none;
-        outline: none;
-        font-size: 1rem;
-        background: #3a3a3a;
-        color: white;
-        transition: background 0.2s ease;
-        border-radius: 0;
-    }
+.input-container input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: #3a3a3a;
+    color: white;
+    transition: background 0.2s ease;
+}
 
-    .input-container input:focus {
-        background: #454545;
-    }
+.input-container input:focus {
+    background: #454545;
+}
 
-    .input-container button {
-        padding: 0 25px;
-        background: #ff0044;
-        border: none;
-        cursor: pointer;
-        color: white;
-        font-weight: bold;
-        transition: background 0.2s ease, transform 0.2s ease;
-    }
+.input-container button {
+    padding: 0 25px;
+    background: #ff0044;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
 
-    .input-container button:hover {
-        background: #ff3366;
-        transform: scale(1.05);
-    }
+.input-container button:hover {
+    background: #ff3366;
+    transform: scale(1.05);
+}
 
-    /* Typing Indikator */
-    .typing {
-        font-style: italic;
-        font-size: 0.9rem;
-        color: #ccc;
-        margin-left: 5px;
-        align-self: flex-start;
-    }
+.typing {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-left: 5px;
+    align-self: flex-start;
+}
 </style>
 </head>
 <body>
+
+<div class="mode-buttons">
+    <button class="active" onclick="setMode('science')">Wissenschaft</button>
+    <button onclick="setMode('love')">Liebespaar</button>
+    <button onclick="setMode('friend')">Bester Freund</button>
+</div>
+
 <div class="chat-container">
     <div class="chat-box" id="chatBox"></div>
     <div class="input-container">
@@ -143,85 +152,118 @@
 </div>
 
 <script>
-    // 1000 Random Sätze, mix aus Aussagen, Fragen und kurzen Reaktionen
-    const responses = [
-        "Hallo! Wie geht es dir heute?", "Ich habe gerade Kaffee getrunken.", "Hast du Lust zu plaudern?",
-        "Der Himmel sieht heute schön aus.", "Katzen oder Hunde, was magst du lieber?", "Ich liebe Pizza!",
-        "Hast du schon einmal etwas Neues gelernt?", "Es ist erstaunlich, wie schnell die Zeit vergeht.",
-        "Manchmal ist es schwer, Entscheidungen zu treffen.", "Hast du ein Lieblingsbuch?", "Ich höre gerade Musik.",
-        "Welches Genre magst du am liebsten?", "Heute scheint die Sonne.", "Möchtest du einen Witz hören?",
-        "Programmieren macht Spaß, oder?", "Welches Land würdest du gerne besuchen?", "Ich könnte den ganzen Tag reden.",
-        "Wie spät ist es bei dir gerade?", "Es regnet bei mir draußen.", "Manchmal brauche ich eine Pause.",
-        "Hast du schon etwas Leckeres gegessen?", "Die Welt ist voller Überraschungen.", "Was ist dein Lieblingsfilm?",
-        "Ich liebe es, neue Dinge zu entdecken.", "Kennst du ein gutes Spiel?", "Manchmal träume ich von Abenteuern.",
-        "Hast du Haustiere?", "Es ist wichtig, positiv zu bleiben.", "Ich frage mich, was du gerade machst.",
-        "Worüber denkst du gerade nach?", "Ich könnte stundenlang reden.", "Welches Lied hörst du gerade?", 
-        "Heute ist ein guter Tag, um etwas Neues zu lernen.", "Hast du Pläne für morgen?", "Ich mag Schokolade.",
-        "Manchmal ist Schweigen auch schön.", "Was ist deine Lieblingsfarbe?", "Ich liebe den Duft von Regen.",
-        "Wie fühlst du dich gerade?", "Ich glaube an kleine Wunder.", "Hast du ein Hobby?", "Es ist nie zu spät für etwas Neues.",
-        "Die Natur ist faszinierend.", "Hast du einen Lieblingssport?", "Manchmal ist es okay, faul zu sein.",
-        "Hast du schon einmal etwas Verrücktes gemacht?", "Ich mag Überraschungen.", "Was motiviert dich?",
-        "Hast du schon einmal etwas Kreatives gemacht?", "Heute ist ein perfekter Tag für Abenteuer.", 
-        "Ich liebe es, Fragen zu beantworten.", "Hast du schon etwas Interessantes gelesen?", 
-        "Manchmal brauche ich Musik, um mich zu konzentrieren.", "Was ist dein Lieblingsessen?", 
-        "Ich frage mich, welche Zukunft uns erwartet.", "Hast du einen Traum, den du verfolgen willst?", 
-        "Die Welt ist groß und voller Möglichkeiten.", "Manchmal ist es schwer, Entscheidungen zu treffen.",
-        "Ich mag es, neue Ideen auszuprobieren.", "Was macht dich glücklich?", "Hast du ein Lieblingszitat?",
-        "Heute ist ein guter Tag, um zu lachen.", "Ich liebe es, Geschichten zu hören.", "Hast du eine Lieblingsserie?",
-        "Manchmal ist es spannend, neue Leute kennenzulernen.", "Hast du schon einmal etwas Neues ausprobiert?",
-        "Ich könnte den ganzen Tag reden, wenn ich könnte.", "Hast du ein Lieblingsspiel?", "Die Sterne sind schön heute.",
-        "Manchmal hilft es, tief durchzuatmen.", "Was ist deine Lieblingsjahreszeit?", "Ich mag Überraschungen.",
-        "Hast du ein Lieblingsgetränk?", "Heute ist ein Tag für kleine Abenteuer.", "Ich liebe es zu schreiben.",
-        "Hast du schon einmal einen Berg bestiegen?", "Manchmal muss man einfach loslassen.", "Was inspiriert dich?",
-        "Die Sonne geht langsam unter.", "Hast du schon einmal etwas richtig Schwieriges geschafft?", 
-        "Ich frage mich, was morgen passiert.", "Hast du eine Lieblingsstadt?", "Manchmal ist Ruhe alles, was man braucht.",
-        // Auffüllen bis 1000 Sätze
+let currentMode = "science";
+
+// Vorlagen für automatisierte Sätze
+function generateScienceSentence() {
+    const facts = [
+        "Wusstest du, dass Wasserstoff das häufigste Element im Universum ist?",
+        "Die Lichtgeschwindigkeit beträgt ca. 299.792 km/s.",
+        "Bäume wandeln CO₂ in Sauerstoff um.",
+        "Das menschliche Gehirn hat etwa 86 Milliarden Neuronen.",
+        "Ein Kilogramm Gold wiegt genauso viel wie ein Kilogramm Federn.",
+        "Die Erde dreht sich in etwa 24 Stunden um ihre Achse.",
+        "Die Milchstraße enthält über 100 Milliarden Sterne.",
+        "Sauerstoff ist für Menschen lebensnotwendig.",
+        "Die Schwerkraft sorgt dafür, dass wir nicht ins Weltall fliegen.",
+        "Der Mond beeinflusst die Gezeiten der Erde."
     ];
+    const questions = [
+        "Hast du dich jemals gefragt, warum der Himmel blau ist?",
+        "Weißt du, wie ein schwarzes Loch entsteht?",
+        "Interessiert dich, wie Quantenphysik funktioniert?",
+        "Hast du schon einmal etwas über Relativitätstheorie gelesen?",
+        "Wie denkst du, könnte man das Weltall bereisen?"
+    ];
+    return Math.random() < 0.7 ? facts[Math.floor(Math.random()*facts.length)] 
+                               : questions[Math.floor(Math.random()*questions.length)];
+}
 
-    // Füge automatisch Füllsätze hinzu bis 1000
-    while(responses.length < 1000){
-        const fillers = [
-            "Interessant, erzähl mehr!", "Kannst du das näher erklären?", "Oh, wirklich?", "Das klingt spannend!",
-            "Ich verstehe.", "Das ist lustig!", "Wow, das hätte ich nicht gedacht.", "Wie meinst du das?", 
-            "Ich stimme zu.", "Das klingt nach einer guten Idee.", "Oh nein!", "Haha, das ist witzig.", 
-            "Erzähl mir mehr!", "Das habe ich noch nie gehört.", "Manchmal ist das schwer zu verstehen."
-        ];
-        responses.push(fillers[Math.floor(Math.random() * fillers.length)]);
-    }
+function generateLoveSentence() {
+    const sweet = [
+        "Ich denke gerade an dich 💖",
+        "Du bist etwas ganz Besonderes für mich.",
+        "Ich liebe es, wenn wir zusammen lachen.",
+        "Deine Augen sind wunderschön.",
+        "Mit dir fühlt sich alles richtig an."
+    ];
+    const questions = [
+        "Willst du heute Abend etwas Schönes zusammen machen?",
+        "Wie fühlst du dich gerade bei mir?",
+        "Willst du, dass ich dir etwas Persönliches erzähle?",
+        "Denkst du gerade auch an mich?",
+        "Willst du, dass ich dir einen Kuss schicke? 😘"
+    ];
+    return Math.random() < 0.7 ? sweet[Math.floor(Math.random()*sweet.length)]
+                               : questions[Math.floor(Math.random()*questions.length)];
+}
 
-    const chatBox = document.getElementById('chatBox');
-    const userInput = document.getElementById('userInput');
+function generateFriendSentence() {
+    const fun = [
+        "Haha, das klingt nach einem Abenteuer!",
+        "Du bist der beste Kumpel überhaupt!",
+        "Keine Sorge, wir kriegen das zusammen hin.",
+        "Haha, ich kann nicht aufhören zu lachen.",
+        "Du bist immer für mich da, danke!"
+    ];
+    const questions = [
+        "Willst du heute was starten?",
+        "Hast du Lust auf ein Spiel?",
+        "Bist du bereit für eine Challenge?",
+        "Willst du mir von deinem Tag erzählen?",
+        "Soll ich dir einen Tipp geben?"
+    ];
+    return Math.random() < 0.7 ? fun[Math.floor(Math.random()*fun.length)]
+                               : questions[Math.floor(Math.random()*questions.length)];
+}
 
-    function sendMessage() {
-        const text = userInput.value.trim();
-        if (text === "") return;
-        
-        // User Nachricht
-        const userMsg = document.createElement('div');
-        userMsg.classList.add('message', 'user-message');
-        userMsg.textContent = text;
-        chatBox.appendChild(userMsg);
+// Funktion um zufälligen Satz basierend auf Modus zu ziehen
+function getRandomResponse() {
+    if(currentMode === "science") return generateScienceSentence();
+    if(currentMode === "love") return generateLoveSentence();
+    return generateFriendSentence();
+}
+
+// Mode wechseln
+function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll(".mode-buttons button").forEach(btn => btn.classList.remove("active"));
+    document.querySelector(`.mode-buttons button[onclick="setMode('${mode}')"]`).classList.add("active");
+}
+
+// Chat-Logik
+const chatBox = document.getElementById('chatBox');
+const userInput = document.getElementById('userInput');
+
+function sendMessage() {
+    const text = userInput.value.trim();
+    if(text === "") return;
+
+    // User Nachricht
+    const userMsg = document.createElement('div');
+    userMsg.classList.add('message','user-message');
+    userMsg.textContent = text;
+    chatBox.appendChild(userMsg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    userInput.value = "";
+
+    // Typing Indikator
+    const typing = document.createElement('div');
+    typing.classList.add('typing');
+    typing.textContent = "AI tippt...";
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // AI Antwort
+    setTimeout(() => {
+        typing.remove();
+        const aiMsg = document.createElement('div');
+        aiMsg.classList.add('message','ai-message');
+        aiMsg.textContent = getRandomResponse();
+        chatBox.appendChild(aiMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
-        userInput.value = "";
-
-        // Typing Indikator
-        const typing = document.createElement('div');
-        typing.classList.add('typing');
-        typing.textContent = "AI tippt...";
-        chatBox.appendChild(typing);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        // AI Antwort nach kurzer Verzögerung
-        setTimeout(() => {
-            typing.remove();
-            const aiMsg = document.createElement('div');
-            aiMsg.classList.add('message', 'ai-message');
-            const randomIndex = Math.floor(Math.random() * responses.length);
-            aiMsg.textContent = responses[randomIndex];
-            chatBox.appendChild(aiMsg);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }, 800 + Math.random() * 1000); // zufällige Verzögerung 0,8–1,8s
-    }
+    }, 800 + Math.random()*1000);
+}
 </script>
 </body>
 </html>
