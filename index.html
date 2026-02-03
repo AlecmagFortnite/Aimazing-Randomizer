@@ -3,136 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Chat AI – Multi-Modus</title>
+<title>Random Chat AI – Multi-Modus + Block</title>
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
-}
-
-.mode-buttons {
-    margin-bottom: 10px;
-}
-.mode-buttons button {
-    padding: 8px 15px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #4444ff;
-    color: white;
-    font-weight: bold;
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-.mode-buttons button.active {
-    background: #ff0044;
-}
-.mode-buttons button:hover {
-    transform: scale(1.05);
-}
-
-.chat-container {
-    width: 450px;
-    max-width: 95%;
-    height: 650px;
-    background: #2c2c2c;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-}
-
-.chat-box {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: rgba(255,255,255,0.02);
-}
-
-.message {
-    max-width: 80%;
-    padding: 12px 18px;
-    border-radius: 18px;
-    word-wrap: break-word;
-    animation: fadeIn 0.3s ease;
-    line-height: 1.4;
-    font-size: 0.95rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
-
-.user-message {
-    background: #ff0044;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 18px;
-}
-
-.ai-message {
-    background: #4444ff;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 18px;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.input-container {
-    display: flex;
-    border-top: 1px solid #555;
-}
-
-.input-container input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    background: #3a3a3a;
-    color: white;
-    transition: background 0.2s ease;
-}
-
-.input-container input:focus {
-    background: #454545;
-}
-
-.input-container button {
-    padding: 0 25px;
-    background: #ff0044;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.input-container button:hover {
-    background: #ff3366;
-    transform: scale(1.05);
-}
-
-.typing {
-    font-style: italic;
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-left: 5px;
-    align-self: flex-start;
-}
+body {margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg,#1e1e1e,#3a3a3a);color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;}
+.mode-buttons{margin-bottom:10px;}
+.mode-buttons button{padding:8px 15px;margin:0 5px;border:none;border-radius:10px;cursor:pointer;background:#4444ff;color:white;font-weight:bold;transition:transform 0.2s ease,background 0.2s ease;}
+.mode-buttons button.active{background:#ff0044;}
+.mode-buttons button:hover{transform:scale(1.05);}
+.chat-container{width:450px;max-width:95%;height:650px;background:#2c2c2c;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.7);position:relative;}
+.chat-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;background:rgba(255,255,255,0.02);}
+.message{max-width:80%;padding:12px 18px;border-radius:18px;word-wrap:break-word;animation:fadeIn 0.3s ease;line-height:1.4;font-size:0.95rem;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+.user-message{background:#ff0044;align-self:flex-end;border-bottom-right-radius:4px;border-bottom-left-radius:18px;}
+.ai-message{background:#4444ff;align-self:flex-start;border-bottom-left-radius:4px;border-bottom-right-radius:18px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.input-container{display:flex;border-top:1px solid #555;}
+.input-container input{flex:1;padding:15px;border:none;outline:none;font-size:1rem;background:#3a3a3a;color:white;transition:background 0.2s ease;}
+.input-container input:focus{background:#454545;}
+.input-container button{padding:0 25px;background:#ff0044;border:none;cursor:pointer;color:white;font-weight:bold;transition:background 0.2s ease,transform 0.2s ease;}
+.input-container button:hover{background:#ff3366;transform:scale(1.05);}
+.typing{font-style:italic;font-size:0.9rem;color:#ccc;margin-left:5px;align-self:flex-start;}
+.blocked-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;font-size:1.5rem;color:red;text-align:center;padding:20px;flex-direction:column;}
+.blocked-overlay button{margin-top:20px;padding:10px 20px;font-size:1rem;background:#ff0044;color:white;border:none;border-radius:10px;cursor:pointer;transition:background 0.2s ease;}
+.blocked-overlay button:hover{background:#ff3366;}
 </style>
 </head>
 <body>
@@ -143,7 +35,7 @@ body {
     <button onclick="setMode('friend')">Bester Freund</button>
 </div>
 
-<div class="chat-container">
+<div class="chat-container" id="chatContainer">
     <div class="chat-box" id="chatBox"></div>
     <div class="input-container">
         <input type="text" id="userInput" placeholder="Schreib was..." onkeydown="if(event.key==='Enter'){sendMessage()}">
@@ -153,91 +45,202 @@ body {
 
 <script>
 let currentMode = "science";
+let blocked = false;
 
-// Vorlagen für automatisierte Sätze
-function generateScienceSentence() {
-    const facts = [
-        "Wusstest du, dass Wasserstoff das häufigste Element im Universum ist?",
-        "Die Lichtgeschwindigkeit beträgt ca. 299.792 km/s.",
-        "Bäume wandeln CO₂ in Sauerstoff um.",
-        "Das menschliche Gehirn hat etwa 86 Milliarden Neuronen.",
-        "Ein Kilogramm Gold wiegt genauso viel wie ein Kilogramm Federn.",
-        "Die Erde dreht sich in etwa 24 Stunden um ihre Achse.",
-        "Die Milchstraße enthält über 100 Milliarden Sterne.",
-        "Sauerstoff ist für Menschen lebensnotwendig.",
-        "Die Schwerkraft sorgt dafür, dass wir nicht ins Weltall fliegen.",
-        "Der Mond beeinflusst die Gezeiten der Erde."
-    ];
-    const questions = [
-        "Hast du dich jemals gefragt, warum der Himmel blau ist?",
-        "Weißt du, wie ein schwarzes Loch entsteht?",
-        "Interessiert dich, wie Quantenphysik funktioniert?",
-        "Hast du schon einmal etwas über Relativitätstheorie gelesen?",
-        "Wie denkst du, könnte man das Weltall bereisen?"
-    ];
-    return Math.random() < 0.7 ? facts[Math.floor(Math.random()*facts.length)] 
-                               : questions[Math.floor(Math.random()*questions.length)];
+// Trigger-Wörter für Block
+const blockedWords = ["Schlampe","Fotze","Hure","Bitch","dumm","Arsch","Arschloch","Schluss"];
+
+// ---- 50 Sätze pro Kategorie ----
+const scienceResponses = [
+"Wusstest du, dass Wasserstoff das häufigste Element im Universum ist?",
+"Die Lichtgeschwindigkeit beträgt 299.792 km/s.",
+"Bäume wandeln CO₂ in Sauerstoff um.",
+"Das menschliche Gehirn hat etwa 86 Milliarden Neuronen.",
+"Die Erde dreht sich in 24 Stunden um ihre Achse.",
+"Die Milchstraße enthält über 100 Milliarden Sterne.",
+"Sauerstoff ist für Menschen lebensnotwendig.",
+"Der Mond beeinflusst die Gezeiten.",
+"Ein Kilogramm Gold wiegt genauso viel wie ein Kilogramm Federn.",
+"Hast du dich jemals gefragt, warum der Himmel blau ist?",
+"Quantenphysik erklärt viele seltsame Phänomene.",
+"Die Schwerkraft hält uns auf der Erde.",
+"Relativitätstheorie beschreibt Raum und Zeit.",
+"Elektronen kreisen um Atomkerne.",
+"Vulkane entstehen durch Magma unter der Erde.",
+"Die Ozeane bedecken 70% der Erdoberfläche.",
+"Ein Blitz kann 30.000 Ampere haben.",
+"DNA speichert genetische Informationen.",
+"Pflanzen benötigen Licht zum Wachsen.",
+"Die Erdrotation verursacht Tag und Nacht.",
+"Sterne entstehen aus Gas- und Staubwolken.",
+"Die Sonne ist ein gelber Zwergstern.",
+"Magnetfelder beeinflussen Kompassnadeln.",
+"Planeten kreisen um Sterne.",
+"Die Erde hat einen festen inneren Kern.",
+"Schall breitet sich schneller in Wasser aus.",
+"Der menschliche Körper besteht zu 60% aus Wasser.",
+"Schwarze Löcher haben eine so starke Gravitation, dass Licht nicht entkommt.",
+"Die Atmosphäre schützt vor schädlicher Strahlung.",
+"Wasser kann in drei Zuständen existieren.",
+"Der Amazonas ist der größte Regenwald.",
+"Die Erdkruste besteht aus Platten.",
+"Vulkanausbrüche können das Klima beeinflussen.",
+"Die Erde hat eine Magnetosphäre.",
+"Satelliten umkreisen die Erde seit den 1950ern.",
+"Das Periodensystem ordnet Elemente nach Eigenschaften.",
+"Der Mount Everest ist der höchste Berg.",
+"Die Ozeane enthalten Millionen Tierarten.",
+"Die Erde ist etwa 4,5 Milliarden Jahre alt.",
+"Fotosynthese erzeugt Sauerstoff und Zucker.",
+"Regen entsteht durch Kondensation von Wasserdampf.",
+"Der Mond verursacht die Gezeiten.",
+"Die Schallgeschwindigkeit beträgt 343 m/s.",
+"Ein Jahr dauert 365,25 Tage.",
+"Der Blutkreislauf versorgt Organe mit Sauerstoff.",
+"Die Erde ist kugelförmig, aber leicht abgeplattet.",
+"Asteroiden bewegen sich durch das Sonnensystem.",
+"Die Erdachse ist um 23,5° geneigt.",
+"Der Nil ist der längste Fluss der Erde.",
+"Vulkane können Erdbeben auslösen.",
+"Der menschliche Körper hat über 600 Muskeln."
+];
+
+const loveResponses = [
+"Ich denke gerade an dich 💖",
+"Du bist etwas ganz Besonderes für mich.",
+"Ich liebe es, wenn wir zusammen lachen.",
+"Deine Augen sind wunderschön.",
+"Mit dir fühlt sich alles richtig an.",
+"Ich kann es kaum erwarten, dich wiederzusehen.",
+"Du machst mich glücklich.",
+"Dein Lächeln ist bezaubernd.",
+"Ich liebe deine Stimme.",
+"Jeder Moment mit dir ist besonders.",
+"Du bist mein Lieblingsmensch.",
+"Ich will für immer bei dir sein.",
+"Deine Nähe tut mir gut.",
+"Ich vermisse dich gerade.",
+"Ich liebe es, wenn wir reden.",
+"Willst du heute Abend etwas Schönes machen?",
+"Ich hab nur Augen für dich.",
+"Deine Hand zu halten macht mich glücklich.",
+"Ich träume von dir.",
+"Mit dir fühlt sich alles leicht an.",
+"Ich liebe deine Art zu lachen.",
+"Ich will, dass du immer glücklich bist.",
+"Du bist wunderschön wie du bist.",
+"Ich freue mich auf unser nächstes Treffen.",
+"Ich liebe, wie du mich verstehst.",
+"Jeder Moment mit dir ist kostbar.",
+"Du bist mein Ein und Alles.",
+"Dein Lächeln ist mein Lieblingsmoment.",
+"Ich will dich nie enttäuschen.",
+"Mit dir kann ich alles teilen.",
+"Ich denke an dich beim Aufwachen.",
+"Du bist mein Herz.",
+"Ich liebe es, wenn du mich ansiehst.",
+"Du bist mein Sonnenschein.",
+"Ich schätze jede Minute mit dir.",
+"Ich liebe es, deine Stimme zu hören.",
+"Dein Lachen ist ansteckend.",
+"Ich will immer bei dir sein.",
+"Mit dir macht das Leben Spaß.",
+"Du bist perfekt für mich.",
+"Ich liebe dich mehr als Worte sagen können.",
+"Ich möchte dich glücklich sehen.",
+"Ich träume von unserer Zukunft.",
+"Ich liebe es, dich zu umarmen.",
+"Du bist meine Inspiration.",
+"Ich liebe es, wenn wir Zeit zusammen verbringen.",
+"Mit dir ist alles besser.",
+"Ich liebe dich einfach."
+];
+
+const friendResponses = [
+"Haha, das klingt nach einem Abenteuer!",
+"Du bist der beste Kumpel überhaupt!",
+"Keine Sorge, wir kriegen das zusammen hin.",
+"Haha, ich kann nicht aufhören zu lachen.",
+"Du bist immer für mich da, danke!",
+"Wir müssen unbedingt was Cooles machen.",
+"Du bist mein Lieblingsmensch.",
+"Ich steh auf dich als Freund!",
+"Ich hab dich echt gern.",
+"Mit dir macht alles mehr Spaß.",
+"Willst du heute was starten?",
+"Hast du Lust auf ein Spiel?",
+"Bist du bereit für eine Challenge?",
+"Willst du mir von deinem Tag erzählen?",
+"Soll ich dir einen Tipp geben?",
+"Ich vertraue dir vollkommen.",
+"Du bist echt lustig.",
+"Ich freue mich immer, dich zu sehen.",
+"Wir haben zusammen schon so viel erlebt.",
+"Du bist immer ehrlich zu mir.",
+"Wir sind ein tolles Team.",
+"Ich schätze deine Meinung.",
+"Du motivierst mich immer.",
+"Ich kann mit dir alles besprechen.",
+"Du bist einzigartig.",
+"Es ist schön, dich als Freund zu haben.",
+"Wir werden immer Freunde bleiben.",
+"Ich kann mich auf dich verlassen.",
+"Du bist einfach klasse.",
+"Ich genieße unsere Zeit zusammen.",
+"Danke, dass es dich gibt.",
+"Mit dir wird jeder Tag besser.",
+"Ich mag es, wie du denkst.",
+"Wir haben immer Spaß zusammen.",
+"Du bist cool.",
+"Ich vertraue dir blind.",
+"Du bist ein echter Freund.",
+"Ich kann dir alles erzählen.",
+"Wir ergänzen uns super.",
+"Du bist immer positiv.",
+"Ich freue mich auf unser nächstes Abenteuer.",
+"Mit dir lachen ist das Beste.",
+"Du bist echt verständnisvoll.",
+"Ich bin froh, dass wir uns kennen.",
+"Wir haben eine starke Freundschaft.",
+"Du bist loyal.",
+"Es ist immer toll, mit dir zu reden.",
+"Ich kann mich auf dich verlassen.",
+"Mit dir fühle ich mich wohl.",
+"Du bist mein Buddy."
+];
+
+// ---- Funktionen ----
+function getRandomResponse(){
+    if(currentMode==="science") return scienceResponses[Math.floor(Math.random()*scienceResponses.length)];
+    if(currentMode==="love") return loveResponses[Math.floor(Math.random()*loveResponses.length)];
+    return friendResponses[Math.floor(Math.random()*friendResponses.length)];
 }
 
-function generateLoveSentence() {
-    const sweet = [
-        "Ich denke gerade an dich 💖",
-        "Du bist etwas ganz Besonderes für mich.",
-        "Ich liebe es, wenn wir zusammen lachen.",
-        "Deine Augen sind wunderschön.",
-        "Mit dir fühlt sich alles richtig an."
-    ];
-    const questions = [
-        "Willst du heute Abend etwas Schönes zusammen machen?",
-        "Wie fühlst du dich gerade bei mir?",
-        "Willst du, dass ich dir etwas Persönliches erzähle?",
-        "Denkst du gerade auch an mich?",
-        "Willst du, dass ich dir einen Kuss schicke? 😘"
-    ];
-    return Math.random() < 0.7 ? sweet[Math.floor(Math.random()*sweet.length)]
-                               : questions[Math.floor(Math.random()*questions.length)];
-}
-
-function generateFriendSentence() {
-    const fun = [
-        "Haha, das klingt nach einem Abenteuer!",
-        "Du bist der beste Kumpel überhaupt!",
-        "Keine Sorge, wir kriegen das zusammen hin.",
-        "Haha, ich kann nicht aufhören zu lachen.",
-        "Du bist immer für mich da, danke!"
-    ];
-    const questions = [
-        "Willst du heute was starten?",
-        "Hast du Lust auf ein Spiel?",
-        "Bist du bereit für eine Challenge?",
-        "Willst du mir von deinem Tag erzählen?",
-        "Soll ich dir einen Tipp geben?"
-    ];
-    return Math.random() < 0.7 ? fun[Math.floor(Math.random()*fun.length)]
-                               : questions[Math.floor(Math.random()*questions.length)];
-}
-
-// Funktion um zufälligen Satz basierend auf Modus zu ziehen
-function getRandomResponse() {
-    if(currentMode === "science") return generateScienceSentence();
-    if(currentMode === "love") return generateLoveSentence();
-    return generateFriendSentence();
-}
-
-// Mode wechseln
-function setMode(mode) {
+// Modus wechseln
+function setMode(mode){
+    if(blocked) return;
     currentMode = mode;
-    document.querySelectorAll(".mode-buttons button").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".mode-buttons button").forEach(btn=>btn.classList.remove("active"));
     document.querySelector(`.mode-buttons button[onclick="setMode('${mode}')"]`).classList.add("active");
 }
 
-// Chat-Logik
+// Chat
 const chatBox = document.getElementById('chatBox');
 const userInput = document.getElementById('userInput');
+const chatContainer = document.getElementById('chatContainer');
 
-function sendMessage() {
+function sendMessage(){
+    if(blocked) return;
     const text = userInput.value.trim();
-    if(text === "") return;
+    if(text==="") return;
+
+    // Prüfen auf Block-Wörter
+    for(const w of blockedWords){
+        if(text.toLowerCase().includes(w.toLowerCase())){
+            triggerBlock();
+            return;
+        }
+    }
 
     // User Nachricht
     const userMsg = document.createElement('div');
@@ -245,24 +248,36 @@ function sendMessage() {
     userMsg.textContent = text;
     chatBox.appendChild(userMsg);
     chatBox.scrollTop = chatBox.scrollHeight;
-    userInput.value = "";
+    userInput.value="";
 
-    // Typing Indikator
-    const typing = document.createElement('div');
+    // Typing
+    const typing=document.createElement('div');
     typing.classList.add('typing');
-    typing.textContent = "AI tippt...";
+    typing.textContent="AI tippt...";
     chatBox.appendChild(typing);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop=chatBox.scrollHeight;
 
-    // AI Antwort
-    setTimeout(() => {
+    setTimeout(()=>{
         typing.remove();
-        const aiMsg = document.createElement('div');
+        const aiMsg=document.createElement('div');
         aiMsg.classList.add('message','ai-message');
-        aiMsg.textContent = getRandomResponse();
+        aiMsg.textContent=getRandomResponse();
         chatBox.appendChild(aiMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }, 800 + Math.random()*1000);
+        chatBox.scrollTop=chatBox.scrollHeight;
+    },800+Math.random()*1000);
+}
+
+// Block-Funktion
+function triggerBlock(){
+    blocked=true;
+    const overlay=document.createElement('div');
+    overlay.classList.add('blocked-overlay');
+    overlay.innerHTML="Du wurdest blockiert! ❌<br>Du hast verloren.";
+    const restartBtn=document.createElement('button');
+    restartBtn.textContent="Neuer Chat starten";
+    restartBtn.onclick=function(){location.reload();};
+    overlay.appendChild(restartBtn);
+    chatContainer.appendChild(overlay);
 }
 </script>
 </body>
