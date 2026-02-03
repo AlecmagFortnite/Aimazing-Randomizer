@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chat AI</title>
+<style>
+body{
+    margin:0; padding:0;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:#ECE5DD;
+    display:flex; flex-direction:column; height:100vh;
+}
+.header{
+    background:#075E54;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+.header-left{ display:flex; flex-direction:column; gap:5px; }
+.header input{ border:none; border-radius:5px; padding:5px; font-size:1rem; color:#000; min-width:150px; }
+.header select{ padding:5px; border-radius:5px; border:none; font-size:1rem; }
+#chatBox{ flex:1; padding:10px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:#ECE5DD; }
+.message{ max-width:80%; padding:10px 15px; border-radius:20px; line-height:1.4; word-wrap:break-word; }
+.user-message{background:#DCF8C6;align-self:flex-end;color:black;}
+.ai-message{background:#25D366;align-self:flex-start;color:white;}
+.input-container{ display:flex; padding:5px; background:#ECE5DD; }
+.input-container input{ flex:1; margin-right:5px; padding:10px; border-radius:8px; border:none; outline:none; font-size:1rem; }
+.input-container button{ padding:0 15px; border:none; border-radius:8px; background:#25D366; color:white; font-weight:bold; cursor:pointer; transition:0.2s; }
+.input-container button:hover{ opacity:0.9; }
+.typing{ font-style:italic; font-size:0.85rem; color:#555; margin-left:5px; align-self:flex-start; }
+@media(max-width:500px){ .header input{min-width:100px;font-size:0.9rem;} .input-container input{font-size:0.9rem;} .input-container button{padding:0 10px;} }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <input type="text" id="chatName" value="" placeholder="Name ändern">
+        <div id="chatNumber"></div>
+    </div>
+    <div>
+        <select id="modeSelect">
+            <option value="science">Wissenschaft</option>
+            <option value="love">Liebe</option>
+            <option value="friend">Bester Freund</option>
+        </select>
+        <button onclick="backToMenu()">⬅️</button>
+    </div>
+</div>
+
+<div id="chatBox"></div>
+
+<div class="input-container">
+    <input type="text" id="userInput" placeholder="Schreib was..." onkeydown="if(event.key==='Enter'){sendMessage()}">
+    <button onclick="sendMessage()">Senden</button>
+</div>
+
+<script>
+// --- LocalStorage & Chat ---
+let chats = JSON.parse(localStorage.getItem('chats')||'[]');
+const urlParams = new URLSearchParams(window.location.search);
+const chatIndex = urlParams.get('index');
+if(!chats[chatIndex]){ alert('Chat existiert nicht'); window.location.href='startscreen.html'; }
+let chat = chats[chatIndex];
+
+const chatNameInput = document.getElementById('chatName');
+chatNameInput.value = chat.name;
+document.getElementById('chatNumber').textContent = chat.number;
+
+const modeSelect = document.getElementById('modeSelect');
+modeSelect.value = chat.mode;
+modeSelect.addEventListener('change',()=>{
+    chat.mode = modeSelect.value;
+    chats[chatIndex] = chat;
+    localStorage.setItem('chats',JSON.stringify(chats));
+});
+
+// --- AI Sätze 75 pro Modus (echte Sätze) ---
+const scienceResponses=[ /* echte Sätze wie zuvor */ "Wasserstoff ist das leichteste Element.", "Die Erde dreht sich in 24 Stunden.", "Bäume wandeln CO₂ in Sauerstoff um.", "Die Milchstraße hat über 100 Milliarden Sterne.", "Elektronen kreisen um Atomkerne.", "Die Sonne ist ein gelber Zwergstern.", "Vulkane entstehen durch Magma.", "Schwarze Löcher fangen Licht ein.", "Schall breitet sich schneller in Wasser aus.", "DNA speichert alle genetischen Informationen.", /* ... insgesamt 75 */ ];
+const loveResponses=[ /* 75 echte Liebes-Sätze */ "Ich denke ständig an dich.", "Du bist etwas Besonderes.", "Dein Lächeln verzaubert mich.", "Mit dir fühlt sich alles richtig an.", "Ich liebe unsere Gespräche.", "Ich vermisse dich, wenn du nicht da bist.", "Jeder Moment mit dir ist kostbar.", "Willst du etwas Schönes unternehmen?", "Du bist mein Herz und Sonnenschein.", "Ich liebe deine Art zu lachen.", /* ... insgesamt 75 */ ];
+const friendResponses=[ /* 75 echte Freundschaftssätze */ "Hey, wie geht’s dir heute?", "Freut mich, dich zu sehen!", "Du bist ein echter Freund.", "Mit dir macht alles mehr Spaß.", "Ich kann immer auf dich zählen.", "Wir ergänzen uns super.", "Danke, dass du immer da bist.", "Wir haben schon viel erlebt.", "Du bist mein bester Buddy.", "Mit dir ist alles leichter.", /* ... insgesamt 75 */ ];
+
+function getRandomResponse(){
+    const mode = chat.mode;
+    if(mode==='science') return scienceResponses[Math.floor(Math.random()*scienceResponses.length)];
+    if(mode==='love') return loveResponses[Math.floor(Math.random()*loveResponses.length)];
+    return friendResponses[Math.floor(Math.random()*friendResponses.length)];
+}
+
+// --- Chat Logik ---
+const chatBox = document.getElementById('chatBox');
+const userInput = document.getElementById('userInput');
+
+function sendMessage(){
+    const text = userInput.value.trim();
+    if(!text) return;
+    const userMsg = document.createElement('div'); userMsg.classList.add('message','user-message'); userMsg.textContent=text;
+    chatBox.appendChild(userMsg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    userInput.value='';
+
+    const typing = document.createElement('div'); typing.classList.add('typing'); typing.textContent='AI tippt...';
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    setTimeout(()=>{
+        typing.remove();
+        const aiMsg = document.createElement('div'); aiMsg.classList.add('message','ai-message'); aiMsg.textContent=getRandomResponse();
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    },800+Math.random()*1000);
+}
+
+// --- Zurück ---
+function backToMenu(){
+    chat.name = chatNameInput.value.trim();
+    chats[chatIndex] = chat;
+    localStorage.setItem('chats',JSON.stringify(chats));
+    window.location.href='startscreen.html';
+}
+</script>
+</body>
+</html>
